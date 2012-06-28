@@ -1,1 +1,4 @@
-/*** ” ‚Ì•`‰æ*/extern void box(double x, double y, double z);
+/*
+** ” ‚Ì•`‰æ
+*/
+extern void box(double x, double y, double z);
