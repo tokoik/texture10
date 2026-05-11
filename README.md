@@ -103,13 +103,13 @@ cd build
 
 ## 4. 解説
 
-プログラムのソースコード（主に `main.cpp` と `box.cpp`）をもとに、このプログラム内で行われている処理手順を解説します。このプログラムは、「複数のテクスチャを横に繋げて合成した１枚の画像ファイル」を読み込み、まずはそのまま単純に立方体の全面に貼り付けてみるという、解説記事における初期状態（雛形）の実装となっています。
+プログラムのソースコード（主に main.cpp と box.cpp）をもとに、このプログラム内で行われている処理手順を解説します。このプログラムは、「複数のテクスチャを横に繋げて合成した１枚の画像ファイル」を読み込み、まずはそのまま単純に立方体の全面に貼り付けてみるという、解説記事における初期状態（雛形）の実装となっています。
 
 ### 4.1 テクスチャの読み込みと割り当て (main.cpp 内の init 関数)
 
 1. **ファイルの読み込み:**
 
-    `glPixelStorei(GL_UNPACK_ALIGNMENT, 4)` を実行し、テクスチャ画像がメモリ上で4バイト境界に配置されていることを指定します。その後、`fopen()` と `fread()` を使って、生画像データ (`dice.raw`) を配列 `texture` に読み込みます。この画像データは横 1024 ピクセル、縦 128 ピクセルの長方形で、RGBA各1バイトの形式です。
+    `glPixelStorei(` `GL_UNPACK_ALIGNMENT`, 4 `)` を実行し、テクスチャ画像がメモリ上で4バイト境界に配置されていることを指定します。その後、`fopen()` と `fread()` を使って、生画像データ (`dice.raw`) を配列 `texture` に読み込みます。この画像データは横 1024 ピクセル、縦 128 ピクセルの長方形で、RGBA各1バイトの形式です。
 
 2. **OpenGLへの転送:**
 
@@ -119,9 +119,9 @@ cd build
 
     [`glTexParameteri()`](https://registry.khronos.org/OpenGL-Refpages/gl4/html/glTexParameter.xhtml) 等を使用し、テクスチャを拡大縮小して貼り付ける際の補間方法（`GL_LINEAR` = バイリニア補間）を設定しています。また、テクスチャ座標が範囲外になった際の処理として `GL_CLAMP` が指定されています。
 
-### 4.2 テクスチャを貼る物体の描画 (box.cpp 内の box() 関数)
+### 4.2 テクスチャを貼る物体の描画 (box.cpp 内の `box()` 関数)
 
-実際に直方体（立方体）を描画している部分です。[`glBegin(GL_QUADS)`](https://registry.khronos.org/OpenGL-Refpages/gl2.1/xhtml/glBegin.xml) から [`glEnd()`](https://registry.khronos.org/OpenGL-Refpages/gl2.1/xhtml/glEnd.xml) の間で、6つの面（四角形）を描画しています。[`glVertex3dv()`](https://registry.khronos.org/OpenGL-Refpages/gl2.1/xhtml/glVertex.xml)（頂点座標の指定）を呼び出す**直前**に、[`glTexCoord2dv()`](https://registry.khronos.org/OpenGL-Refpages/gl2.1/xhtml/glTexCoord.xml) を使ってテクスチャ座標を指定しています。
+実際に直方体（立方体）を描画している部分です。[`glBegin(` `GL_QUADS` `)`](https://registry.khronos.org/OpenGL-Refpages/gl2.1/xhtml/glBegin.xml) から [`glEnd()`](https://registry.khronos.org/OpenGL-Refpages/gl2.1/xhtml/glEnd.xml) の間で、6つの面（四角形）を描画しています。[`glVertex3dv()`](https://registry.khronos.org/OpenGL-Refpages/gl2.1/xhtml/glVertex.xml)（頂点座標の指定）を呼び出す**直前**に、[`glTexCoord2dv()`](https://registry.khronos.org/OpenGL-Refpages/gl2.1/xhtml/glTexCoord.xml) を使ってテクスチャ座標を指定しています。
 
 このプログラムの初期状態では、6つの面すべてに対してテクスチャ座標 `(0.0, 0.0)` から `(1.0, 1.0)` の範囲をそのまま割り当てています。
 
