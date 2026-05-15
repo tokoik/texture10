@@ -21,51 +21,44 @@
 ### 2.1 Windows (Visual Studio 2022 の場合)
 
 1. コマンドプロンプトまたは PowerShell を開き、このプロジェクトのディレクトリに移動します。
-
 2. 以下のコマンドを実行してビルドディレクトリを作成し、CMake で構成を行います。
 
-```bat
-mkdir build
-cd build
-cmake .. -G "Visual Studio 17 2022"
-```
+   ```bat
+   mkdir build
+   cd build
+   cmake .. -G "Visual Studio 17 2022"
+   ```
 
 3. 生成された build フォルダ内の texture10.sln を Visual Studio で開きます。
-
 4. ソリューションエクスプローラーで texture10 プロジェクトを右クリックし、「スタートアップ プロジェクトに設定」を選択します。
-
 5. 「ローカル Windows デバッガー」をクリックするか、F5 キーを押してビルドおよび実行します。
 
 ### 2.2 macOS (Xcode の場合)
 
 1. ターミナルを開き、このプロジェクトのディレクトリに移動します。
-
 2. 以下のコマンドを実行してビルドディレクトリを作成し、Xcode 用のプロジェクトを生成します。
 
-```sh
-mkdir build
-cd build
-cmake .. -G Xcode
-```
+   ```sh
+   mkdir build
+   cd build
+   cmake .. -G Xcode
+   ```
 
 3. 生成された build/texture10.xcodeproj を Xcode で開きます。
-
 4. 左上のスキーム選択（再生ボタンの横）が texture10 になっていることを確認します。
-
 5. 「Run」ボタン（再生ボタン）をクリックするか、Command + R を押してビルドおよび実行します。
 
 ### 2.3 Ubuntu Linux
 
 1. ターミナルを開き、このプロジェクトのディレクトリに移動します。
-
 2. 必要なパッケージ（freeglut3-dev や pkg-config など）がインストールされていることを確認し、以下のコマンドでビルドします。
 
-```sh
-mkdir build
-cd build
-cmake ..
-make
-```
+   ```sh
+   mkdir build
+   cd build
+   cmake ..
+   make
+   ```
 
 ## 3. 使い方
 
@@ -75,49 +68,53 @@ make
 
 - **Windows**
 
-Visual Studio 上で「ローカル Windows デバッガー」をクリックして実行するか、またはコマンドプロンプトから以下のコマンドで起動します。
+  Visual Studio 上で「ローカル Windows デバッガー」をクリックして実行するか、またはコマンドプロンプトから以下のコマンドで起動します。
 
-```cmd
-cd build\Debug
-texture10.exe
-```
+  ```cmd
+  cd build\Debug
+  texture10.exe
+  ```
 
 - **macOS**
 
-Xcode 上で左上の「Run（再生ボタン）」をクリックするのが楽です。これにより texture10.app アプリケーションバンドルとして自動的に実行されます。アプリケーションバンドルを直接起動するなら、Finder から build/Debug/texture10.app をダブルクリックするか、ターミナルから open build/Debug/texture10.app を実行します (この場合はエラーメッセージ等が表示されません)。
+  Xcode 上で左上の「Run（再生ボタン）」をクリックするのが楽です。これにより texture10.app アプリケーションバンドルとして自動的に実行されます。アプリケーションバンドルを直接起動するなら、Finder から build/Debug/texture10.app をダブルクリックするか、ターミナルから open build/Debug/texture10.app を実行します (この場合はエラーメッセージ等が表示されません)。
 
 - **Ubuntu Linux**
 
-ターミナルから以下のコマンドで実行ファイル（バイナリ）を直接起動します。
+  ターミナルから以下のコマンドで実行ファイル（バイナリ）を直接起動します。
 
-```sh
-cd build
-./texture10
-```
+  ```sh
+  cd build
+  ./texture10
+  ```
 
 ### 3.2 操作方法
 
-- **マウスの左ボタンでドラッグ**: 画面内のオブジェクト（箱）を３次元的に回転させることができます。多様な角度から、テクスチャがどのように貼り付けられているかを確認してください。
+- **マウスの左ボタンでドラッグ**
 
-- **キーボードの q, Q または ESC キー**: プログラムを終了します。
+  画面内のオブジェクト（箱）を３次元的に回転させることができます。多様な角度から、テクスチャがどのように貼り付けられているかを確認してください。
+
+- **キーボードの q, Q または ESC キー**
+
+  プログラムを終了します。
 
 ## 4. 解説
 
 プログラムのソースコード（主に main.cpp と box.cpp）をもとに、このプログラム内で行われている処理手順を解説します。このプログラムは、「複数のテクスチャを横に繋げて合成した１枚の画像ファイル」を読み込み、まずはそのまま単純に立方体の全面に貼り付けてみるという、解説記事における初期状態（雛形）の実装となっています。
 
-### 4.1 テクスチャの読み込みと割り当て (main.cpp 内の init 関数)
+### 4.1 テクスチャの読み込みと割り当て (main.cpp 内の `init()` 関数)
 
-1. **ファイルの読み込み:**
+1. **ファイルの読み込み**
 
-    `glPixelStorei(` `GL_UNPACK_ALIGNMENT`, 4 `)` を実行し、テクスチャ画像がメモリ上で4バイト境界に配置されていることを指定します。その後、`fopen()` と `fread()` を使って、生画像データ (`dice.raw`) を配列 `texture` に読み込みます。この画像データは横 1024 ピクセル、縦 128 ピクセルの長方形で、RGBA各1バイトの形式です。
+   `glPixelStorei(` `GL_UNPACK_ALIGNMENT`, 4 `)` を実行し、テクスチャ画像がメモリ上で4バイト境界に配置されていることを指定します。その後、`fopen()` と `fread()` を使って、生画像データ (`dice.raw`) を配列 `texture` に読み込みます。この画像データは横 1024 ピクセル、縦 128 ピクセルの長方形で、RGBA各1バイトの形式です。
 
-2. **OpenGLへの転送:**
+2. **OpenGLへの転送**
 
-    [`glTexImage2D()`](https://registry.khronos.org/OpenGL-Refpages/gl4/html/glTexImage2D.xhtml) 関数を使って、配列に読み込んだ画像データを OpenGL のシステムに**2Dテクスチャ**として登録します。
+   [`glTexImage2D()`](https://registry.khronos.org/OpenGL-Refpages/gl4/html/glTexImage2D.xhtml) 関数を使って、配列に読み込んだ画像データを OpenGL のシステムに**2Dテクスチャ**として登録します。
 
-3. **各種パラメータの設定:**
+3. **各種パラメータの設定**
 
-    [`glTexParameteri()`](https://registry.khronos.org/OpenGL-Refpages/gl4/html/glTexParameter.xhtml) 等を使用し、テクスチャを拡大縮小して貼り付ける際の補間方法（`GL_LINEAR` = バイリニア補間）を設定しています。また、テクスチャ座標が範囲外になった際の処理として `GL_CLAMP` が指定されています。
+   [`glTexParameteri()`](https://registry.khronos.org/OpenGL-Refpages/gl4/html/glTexParameter.xhtml) 等を使用し、テクスチャを拡大縮小して貼り付ける際の補間方法（`GL_LINEAR` = バイリニア補間）を設定しています。また、テクスチャ座標が範囲外になった際の処理として `GL_CLAMP` が指定されています。
 
 ### 4.2 テクスチャを貼る物体の描画 (box.cpp 内の `box()` 関数)
 
